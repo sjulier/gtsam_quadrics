@@ -15,6 +15,8 @@
  * @brief factor between Pose3 and ConstrainedDualQuadric
  */
 
+//#include <boost/function.hpp>
+
 #include <gtsam_quadrics/geometry/BoundingBoxFactor.h>
 #include <gtsam_quadrics/geometry/QuadricCamera.h>
 #include <gtsam_quadrics/base/QuadricProjectionException.h>
@@ -76,7 +78,7 @@ Vector BoundingBoxFactor::evaluateError(const Pose3& pose, const ConstrainedDual
 
 
     if (NUMERICAL_DERIVATIVE) {
-      boost::function<Vector(const Pose3&, const ConstrainedDualQuadric&)> funPtr(boost::bind(&BoundingBoxFactor::evaluateError, this, _1, _2, boost::none, boost::none));
+      std::function<Vector(const Pose3&, const ConstrainedDualQuadric&)> funPtr(boost::bind(&BoundingBoxFactor::evaluateError, this, _1, _2, boost::none, boost::none));
       if (H1) {
         Eigen::Matrix<double, 4,6> db_dx_ = numericalDerivative21(funPtr, pose, quadric, 1e-6);
         *H1 = db_dx_;

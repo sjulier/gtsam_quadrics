@@ -232,7 +232,7 @@ AlignedBox2 DualConic::smartBounds(const boost::shared_ptr<Cal3_S2>& calibration
     }; 
 
     // cast to boost::function for numericalDerivative 
-    auto boost_funptr(static_cast<boost::function<Vector(const Matrix33&)>>(bounds_funptr)); 
+    auto boost_funptr(static_cast<std::function<Vector(const Matrix33&)>>(bounds_funptr)); 
 
     // calculate derivative of conic_matrix wrt quadric vector 
     Eigen::Matrix<double, 4,9> db_dC = numericalDerivative11(boost_funptr, this->matrix(), 1e-6); 
@@ -266,7 +266,7 @@ bool DualConic::isEllipse(void) const {
 
 /* ************************************************************************* */
 bool DualConic::contains(const Point2& p) const {
-  Vector3 point = (Vector3() << p.vector(), 1.0).finished();
+  Vector3 point = (Vector3() << p, 1.0).finished();
   double pointError = point.transpose() * this->matrix().inverse() * point;
 
   // apply a threshold due to noisy matrix inversion
